@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Insurance Basics & EOB Interactive Lab</title>
+  <style>
+    :root{
+      --bg-1:#0b1020;
+      --bg-2:#121a33;
+      --bg-3:#1c2752;
+
+      --text:#f8fbff;
+      --muted:#d8e3ff;
+      --soft:#b8c7ea;
+
+      --glass:rgba(255,255,255,.10);
+      --glass-2:rgba(255,255,255,.14);
+      --glass-3:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.17);
+      --shadow:0 18px 60px rgba(0,0,0,.30);
+
+      --violet:#8b5cf6;
+      --fuchsia:#d946ef;
+      --cyan:#22d3ee;
+      --teal:#14b8a6;
+      --blue:#3b82f6;
+      --sky:#38bdf8;
+      --green:#22c55e;
+      --emerald:#10b981;
+      --amber:#f59e0b;
+      --rose:#fb7185;
+      --red:#ef4444;
+      --indigo:#6366f1;
+
+      --r-xl:26px;
+      --r-lg:20px;
+      --r-md:16px;
+      --r-sm:12px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(217,70,239,.22), transparent 26%),
+        radial-gradient(circle at 88% 10%, rgba(34,211,238,.20), transparent 24%),
+        radial-gradient(circle at 85% 70%, rgba(59,130,246,.18), transparent 26%),
+        radial-gradient(circle at 18% 84%, rgba(139,92,246,.18), transparent 28%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 48%, var(--bg-3));
+      background-attachment: fixed;
+    }
+
+    .app{
+      width:min(1240px, 95%);
+      margin:18px auto 54px;
+    }
+
+    .glass{
+      position:relative;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.07));
+      border:1px solid var(--line);
+      border-radius:var(--r-xl);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      overflow:hidden;
+    }
+
+    .glass::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), transparent 30%),
+        radial-gradient(circle at top left, rgba(255,255,255,.09), transparent 24%);
+      opacity:.75;
+    }
+
+    h1,h2,h3,h4,p{margin:0}
+    button, textarea, input{font:inherit}
+
+    .hero{
+      padding:28px;
+    }
+
+    .hero-band{
+      position:absolute;
+      inset:auto auto -46px -46px;
+      width:240px;
+      height:240px;
+      background:radial-gradient(circle, rgba(255,255,255,.12), transparent 65%);
+      filter:blur(6px);
+      pointer-events:none;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+      position:relative;
+      z-index:1;
+    }
+
+    h1{
+      font-size:clamp(2rem, 3.7vw, 3.15rem);
+      line-height:1.05;
+      letter-spacing:-.02em;
+      margin-bottom:10px;
+    }
+
+    .sub{
+      color:var(--muted);
+      max-width:940px;
+      line-height:1.6;
+      font-size:1.02rem;
+    }
+
+    .controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    button{
+      border:none;
+      border-radius:18px;
+      padding:12px 16px;
+      font-weight:800;
+      letter-spacing:.01em;
+      color:white;
+      cursor:pointer;
+      transition:transform .18s ease, filter .18s ease, box-shadow .18s ease, opacity .18s ease;
+      box-shadow:0 10px 28px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.18);
+    }
+    button:hover{transform:translateY(-1px); filter:brightness(1.04)}
+    button:active{transform:translateY(1px)}
+    button[disabled]{opacity:.58; cursor:not-allowed; transform:none}
+
+    .btn-primary{
+      background:linear-gradient(135deg, rgba(99,102,241,.95), rgba(217,70,239,.90));
+    }
+    .btn-cyan{
+      background:linear-gradient(135deg, rgba(14,165,233,.94), rgba(34,211,238,.88));
+    }
+    .btn-green{
+      background:linear-gradient(135deg, rgba(16,185,129,.94), rgba(34,197,94,.88));
+    }
+    .btn-amber{
+      background:linear-gradient(135deg, rgba(245,158,11,.95), rgba(251,146,60,.90));
+    }
+    .btn-rose{
+      background:linear-gradient(135deg, rgba(244,63,94,.95), rgba(251,113,133,.88));
+    }
+    .btn-violet{
+      background:linear-gradient(135deg, rgba(124,58,237,.96), rgba(99,102,241,.88));
+    }
+    .btn-secondary{
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.16);
+      color:var(--text);
+      box-shadow:0 12px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.12);
+    }
+
+    .progress-wrap{
+      margin-top:18px;
+      display:grid;
+      gap:10px;
+      position:relative;
+      z-index:1;
+    }
+
+    .progress-head{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color:var(--muted);
+      font-weight:600;
+    }
+
+    .bar{
+      width:100%;
+      height:16px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.11);
+      overflow:hidden;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,.25);
+    }
+
+    .bar-fill{
+      width:0%;
+      height:100%;
+      border-radius:999px;
+      background:linear-gradient(90deg, var(--violet), var(--fuchsia), var(--cyan), var(--green));
+      box-shadow:0 0 22px rgba(34,211,238,.28);
+      transition:width .4s ease;
+    }
+
+    .badge-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .badge{
+      padding:10px 13px;
+      border-radius:999px;
+      font-size:.92rem;
+      font-weight:800;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.14);
+      color:white;
+    }
+    .badge.strong{
+      background:linear-gradient(135deg, rgba(16,185,129,.28), rgba(34,197,94,.20));
+      border-color:rgba(34,197,94,.30);
+    }
+    .badge.dev{
+      background:linear-gradient(135deg, rgba(245,158,11,.25), rgba(251,191,36,.15));
+      border-color:rgba(245,158,11,.28);
+    }
+    .badge.review{
+      background:linear-gradient(135deg, rgba(244,63,94,.25), rgba(251,113,133,.16));
+      border-color:rgba(251,113,133,.28);
+    }
+
+    .nav-grid{
+      display:grid;
+      grid-template-columns:repeat(7, minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    .nav-card{
+      text-decoration:none;
+      color:var(--text);
+      min-height:84px;
+      padding:15px 10px;
+      border-radius:22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-weight:800;
+      line-height:1.25;
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 14px 28px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.12);
+      transition:transform .18s ease, filter .18s ease;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+    }
+    .nav-card:nth-child(1){background:linear-gradient(135deg, rgba(99,102,241,.30), rgba(217,70,239,.16))}
+    .nav-card:nth-child(2){background:linear-gradient(135deg, rgba(124,58,237,.28), rgba(59,130,246,.18))}
+    .nav-card:nth-child(3){background:linear-gradient(135deg, rgba(34,211,238,.24), rgba(20,184,166,.16))}
+    .nav-card:nth-child(4){background:linear-gradient(135deg, rgba(59,130,246,.24), rgba(56,189,248,.16))}
+    .nav-card:nth-child(5){background:linear-gradient(135deg, rgba(16,185,129,.24), rgba(34,197,94,.16))}
+    .nav-card:nth-child(6){background:linear-gradient(135deg, rgba(245,158,11,.24), rgba(251,191,36,.14))}
+    .nav-card:nth-child(7){background:linear-gradient(135deg, rgba(244,63,94,.24), rgba(217,70,239,.14))}
+    .nav-card:hover{
+      transform:translateY(-3px);
+      filter:brightness(1.05);
+    }
+
+    .section{
+      display:none;
+      margin-top:18px;
+      padding:24px;
+      animation:fadeIn .4s ease;
+    }
+    .section.active{display:block}
+
+    @keyframes fadeIn{
+      from{opacity:0; transform:translateY(10px)}
+      to{opacity:1; transform:none}
+    }
+
+    .section-top{
+      display:flex;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    .section-top p{
+      color:var(--muted);
+      line-height:1.6;
+      max-width:920px;
+      margin-top:6px;
+    }
+
+    .chip-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      font-size:.92rem;
+      font-weight:700;
+      color:white;
+      border:1px solid rgba(255,255,255,.13);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+    }
+    .chip:nth-child(1){background:linear-gradient(135deg, rgba(99,102,241,.34), rgba(139,92,246,.20))}
+    .chip:nth-child(2){background:linear-gradient(135deg, rgba(14,165,233,.30), rgba(34,211,238,.18))}
+    .chip:nth-child(3){background:linear-gradient(135deg, rgba(16,185,129,.30), rgba(34,197,94,.16))}
+    .chip:nth-child(4){background:linear-gradient(135deg, rgba(245,158,11,.28), rgba(251,191,36,.16))}
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+    }
+
+    .stack{display:grid; gap:16px}
+
+    .card{
+      position:relative;
+      padding:18px;
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.06));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 14px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.10);
+      z-index:1;
+    }
+
+    .card.tone-violet{background:linear-gradient(180deg, rgba(99,102,241,.20), rgba(255,255,255,.05))}
+    .card.tone-cyan{background:linear-gradient(180deg, rgba(34,211,238,.18), rgba(255,255,255,.05))}
+    .card.tone-green{background:linear-gradient(180deg, rgba(16,185,129,.18), rgba(255,255,255,.05))}
+    .card.tone-amber{background:linear-gradient(180deg, rgba(245,158,11,.18), rgba(255,255,255,.05))}
+    .card.tone-rose{background:linear-gradient(180deg, rgba(244,63,94,.18), rgba(255,255,255,.05))}
+
+    .mini{
+      font-size:.94rem;
+      line-height:1.55;
+      color:var(--muted);
+    }
+
+    .big{
+      font-size:1.05rem;
+      line-height:1.6;
+      color:var(--text);
+    }
+
+    .prompt-box{
+      padding:15px 16px;
+      border-radius:18px;
+      line-height:1.6;
+      border:1px solid rgba(255,255,255,.15);
+      background:
+        linear-gradient(135deg, rgba(59,130,246,.18), rgba(217,70,239,.12)),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+    .timeline{
+      display:grid;
+      gap:11px;
+    }
+
+    .step{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:14px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .num{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      flex:0 0 36px;
+      font-weight:900;
+      box-shadow:0 8px 18px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.22);
+      background:linear-gradient(135deg, rgba(99,102,241,.95), rgba(34,211,238,.88));
+    }
+
+    .predict-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:12px;
+    }
+
+    .predict-btn{
+      min-height:88px;
+      text-align:left;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.15);
+      color:white;
+      padding:14px;
+      border-radius:20px;
+      line-height:1.45;
+      font-weight:800;
+    }
+    .predict-btn:nth-child(1){box-shadow:inset 0 0 0 1px rgba(139,92,246,.18), 0 10px 24px rgba(0,0,0,.12)}
+    .predict-btn:nth-child(2){box-shadow:inset 0 0 0 1px rgba(34,211,238,.20), 0 10px 24px rgba(0,0,0,.12)}
+    .predict-btn:nth-child(3){box-shadow:inset 0 0 0 1px rgba(16,185,129,.18), 0 10px 24px rgba(0,0,0,.12)}
+    .predict-btn.selected{
+      background:linear-gradient(135deg, rgba(16,185,129,.28), rgba(34,197,94,.18));
+      outline:2px solid rgba(34,197,94,.45);
+    }
+
+    /* FIXED CORE CONCEPT CARDS */
+    .concept-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:14px;
+      position:relative;
+      z-index:1;
+      align-items:stretch;
+    }
+
+    .concept-card{
+      position:relative;
+      height:260px;
+      min-height:260px;
+      cursor:pointer;
+      perspective:1200px;
+    }
+
+    .concept-card .inner{
+      position:relative;
+      width:100%;
+      height:100%;
+      transform-style:preserve-3d;
+      transition:transform .6s ease;
+    }
+
+    .concept-card.flipped .inner{
+      transform:rotateY(180deg);
+    }
+
+    .concept-face{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      backface-visibility:hidden;
+      -webkit-backface-visibility:hidden;
+      border-radius:22px;
+      padding:18px;
+      border:1px solid rgba(255,255,255,.15);
+      box-shadow:0 14px 28px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.10);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    .concept-front{
+      justify-content:space-between;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+    }
+
+    .concept-card:nth-child(4n+1) .concept-front{
+      background:linear-gradient(180deg, rgba(99,102,241,.22), rgba(255,255,255,.05));
+    }
+    .concept-card:nth-child(4n+2) .concept-front{
+      background:linear-gradient(180deg, rgba(34,211,238,.22), rgba(255,255,255,.05));
+    }
+    .concept-card:nth-child(4n+3) .concept-front{
+      background:linear-gradient(180deg, rgba(16,185,129,.20), rgba(255,255,255,.05));
+    }
+    .concept-card:nth-child(4n+4) .concept-front{
+      background:linear-gradient(180deg, rgba(245,158,11,.20), rgba(255,255,255,.05));
+    }
+
+    .concept-back{
+      transform:rotateY(180deg);
+      background:
+        linear-gradient(135deg, rgba(99,102,241,.24), rgba(34,211,238,.12)),
+        linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+      justify-content:flex-start;
+    }
+
+    .back-content{
+      flex:1;
+      min-height:0;
+      overflow-y:auto;
+      padding-right:6px;
+      line-height:1.55;
+      scrollbar-width:thin;
+      scrollbar-color:rgba(255,255,255,.45) transparent;
+    }
+
+    .back-content::-webkit-scrollbar{
+      width:8px;
+    }
+
+    .back-content::-webkit-scrollbar-track{
+      background:transparent;
+    }
+
+    .back-content::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,.32);
+      border-radius:999px;
+    }
+
+    .term{
+      font-size:1.14rem;
+      font-weight:900;
+      letter-spacing:-.01em;
+    }
+
+    .tap{
+      color:var(--soft);
+      font-size:.88rem;
+      margin-top:10px;
+      flex-shrink:0;
+    }
+
+    .qa-box{
+      position:relative;
+      z-index:1;
+      padding:18px;
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;
+      gap:14px;
+    }
+
+    .options{
+      display:grid;
+      gap:10px;
+    }
+
+    .option{
+      width:100%;
+      text-align:left;
+      padding:14px 15px;
+      border-radius:17px;
+      line-height:1.45;
+      font-weight:800;
+      color:white;
+      background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 10px 22px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .option:nth-child(4n+1){box-shadow: inset 0 0 0 1px rgba(99,102,241,.18), 0 10px 22px rgba(0,0,0,.12)}
+    .option:nth-child(4n+2){box-shadow: inset 0 0 0 1px rgba(34,211,238,.18), 0 10px 22px rgba(0,0,0,.12)}
+    .option:nth-child(4n+3){box-shadow: inset 0 0 0 1px rgba(16,185,129,.16), 0 10px 22px rgba(0,0,0,.12)}
+    .option:nth-child(4n+4){box-shadow: inset 0 0 0 1px rgba(245,158,11,.16), 0 10px 22px rgba(0,0,0,.12)}
+    .option.correct{
+      background:linear-gradient(135deg, rgba(16,185,129,.30), rgba(34,197,94,.18));
+      border-color:rgba(34,197,94,.42);
+    }
+    .option.incorrect{
+      background:linear-gradient(135deg, rgba(244,63,94,.26), rgba(251,113,133,.16));
+      border-color:rgba(251,113,133,.40);
+    }
+
+    .feedback{
+      margin-top:2px;
+      padding:14px 15px;
+      border-radius:16px;
+      line-height:1.6;
+      display:none;
+      border:1px solid transparent;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+    }
+    .feedback.show{display:block}
+    .feedback.good{
+      background:linear-gradient(135deg, rgba(16,185,129,.20), rgba(34,197,94,.10));
+      border-color:rgba(34,197,94,.30);
+    }
+    .feedback.bad{
+      background:linear-gradient(135deg, rgba(244,63,94,.20), rgba(251,113,133,.10));
+      border-color:rgba(251,113,133,.28);
+    }
+    .feedback.info{
+      background:linear-gradient(135deg, rgba(14,165,233,.18), rgba(34,211,238,.10));
+      border-color:rgba(34,211,238,.28);
+    }
+
+    .match-area{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+    }
+
+    .bank, .dropzones{
+      display:grid;
+      gap:12px;
+    }
+
+    .pill{
+      padding:12px 14px;
+      border-radius:16px;
+      cursor:grab;
+      font-weight:800;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 10px 20px rgba(0,0,0,.12);
+      user-select:none;
+    }
+
+    .dropzone{
+      min-height:94px;
+      padding:14px;
+      border-radius:18px;
+      border:2px dashed rgba(255,255,255,.18);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      display:grid;
+      gap:10px;
+      align-content:start;
+      transition:background .18s ease, border-color .18s ease;
+    }
+    .dropzone.over{
+      border-color:rgba(34,211,238,.65);
+      background:linear-gradient(135deg, rgba(34,211,238,.16), rgba(59,130,246,.08));
+    }
+    .dropzone.correct{
+      border-color:rgba(34,197,94,.60);
+      background:linear-gradient(135deg, rgba(16,185,129,.16), rgba(34,197,94,.08));
+    }
+    .dropzone.wrong{
+      border-color:rgba(251,113,133,.55);
+      background:linear-gradient(135deg, rgba(244,63,94,.15), rgba(251,113,133,.08));
+    }
+
+    .eob-shell{
+      display:grid;
+      grid-template-columns:1.04fr .96fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .eob{
+      background:#f8fbff;
+      color:#0f172a;
+      border-radius:24px;
+      overflow:hidden;
+      box-shadow:0 16px 36px rgba(0,0,0,.16);
+    }
+
+    .eob-head{
+      padding:18px;
+      color:white;
+      background:linear-gradient(135deg, #2563eb, #06b6d4 55%, #8b5cf6);
+    }
+
+    .eob-note{
+      font-size:.91rem;
+      line-height:1.5;
+      color:#e0f2fe;
+      margin-top:6px;
+    }
+
+    .eob-body{
+      padding:18px;
+      display:grid;
+      gap:12px;
+      background:linear-gradient(180deg, #ffffff, #eef6ff);
+    }
+
+    .eob-row{
+      display:grid;
+      grid-template-columns:1.2fr repeat(4, .8fr);
+      gap:8px;
+      align-items:center;
+    }
+
+    .eob-cell{
+      padding:12px 10px;
+      border-radius:14px;
+      background:#e2ebfb;
+      border:2px solid transparent;
+      font-size:.95rem;
+      font-weight:800;
+      cursor:pointer;
+      transition:transform .16s ease, border-color .18s ease, box-shadow .18s ease;
+      box-shadow:0 8px 18px rgba(37,99,235,.08);
+    }
+
+    .eob-cell:hover{
+      transform:translateY(-1px);
+      border-color:#38bdf8;
+      box-shadow:0 10px 24px rgba(14,165,233,.12);
+    }
+
+    .eob-cell.header{
+      background:#cdd9f1;
+      cursor:default;
+      box-shadow:none;
+    }
+
+    .inspect-panel{
+      min-height:100%;
+    }
+
+    .work-case{
+      padding:18px;
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;
+      gap:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .confidence{
+      display:grid;
+      gap:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .conf-row{
+      padding:15px;
+      border-radius:20px;
+      background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;
+      gap:10px;
+    }
+
+    .scale{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .scale button{
+      min-width:146px;
+      padding:11px 14px;
+      color:white;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .scale button:nth-child(1){box-shadow: inset 0 0 0 1px rgba(16,185,129,.18), 0 8px 18px rgba(0,0,0,.10)}
+    .scale button:nth-child(2){box-shadow: inset 0 0 0 1px rgba(245,158,11,.18), 0 8px 18px rgba(0,0,0,.10)}
+    .scale button:nth-child(3){box-shadow: inset 0 0 0 1px rgba(251,113,133,.18), 0 8px 18px rgba(0,0,0,.10)}
+
+    .scale button.active[data-value="strong"]{
+      background:linear-gradient(135deg, rgba(16,185,129,.34), rgba(34,197,94,.22));
+    }
+    .scale button.active[data-value="developing"]{
+      background:linear-gradient(135deg, rgba(245,158,11,.34), rgba(251,191,36,.20));
+    }
+    .scale button.active[data-value="review"]{
+      background:linear-gradient(135deg, rgba(244,63,94,.30), rgba(251,113,133,.18));
+    }
+
+    textarea, input[type="text"]{
+      width:100%;
+      border:none;
+      outline:none;
+      color:var(--text);
+      border-radius:18px;
+      padding:14px 15px;
+      line-height:1.55;
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    textarea::placeholder, input::placeholder{color:#d2dcf7}
+    textarea{
+      min-height:145px;
+      resize:vertical;
+    }
+
+    .output{
+      min-height:170px;
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:.95rem;
+    }
+
+    .statusline{
+      min-height:22px;
+      font-size:.93rem;
+      color:var(--muted);
+      margin-top:8px;
+    }
+
+    .copy-note{
+      color:var(--muted);
+      line-height:1.55;
+      font-size:.93rem;
+    }
+
+    .footer-nav{
+      margin-top:20px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
+    }
+
+    audio{
+      width:100%;
+      margin-top:10px;
+    }
+
+    @media (max-width:1080px){
+      .grid-2, .eob-shell, .match-area{grid-template-columns:1fr}
+      .concept-grid{grid-template-columns:repeat(3, minmax(0,1fr))}
+      .nav-grid{grid-template-columns:repeat(4, minmax(0,1fr))}
+    }
+
+    @media (max-width:760px){
+      .hero, .section{padding:18px}
+      .concept-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+      .predict-grid{grid-template-columns:1fr}
+      .nav-grid{grid-template-columns:repeat(2, minmax(0,1fr))}
+      .eob-row{grid-template-columns:1fr}
+      .eob-cell.header{display:none}
+      .concept-card{
+        height:280px;
+        min-height:280px;
+      }
+    }
+
+    @media (max-width:520px){
+      .concept-grid{grid-template-columns:1fr}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important; scroll-behavior:auto !important}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero glass">
+      <div class="hero-band"></div>
+
+      <div class="topbar">
+        <div>
+          <h1>Insurance Basics & EOB Interactive Lab</h1>
+          <p class="sub">
+            Learn insurance in a way that makes sense in real life. Build strong understanding of premium, deductible, copay, coinsurance, claim flow, adjudication, and how to truly read an Explanation of Benefits.
+          </p>
+        </div>
+
+        <div class="controls">
+          <button id="soundToggle" class="btn-secondary" aria-pressed="false">🔊 Sound On</button>
+          <button id="resetAll" class="btn-secondary">Reset Progress</button>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-head">
+          <div><strong>Overall Progress:</strong> <span id="overallProgressText">0%</span></div>
+          <div><strong>Mastery:</strong> <span id="masteryText">Just getting started</span></div>
+        </div>
+        <div class="bar"><div class="bar-fill" id="overallBar"></div></div>
+      </div>
+
+      <div class="badge-row" id="badgeRow">
+        <span class="badge">Welcome</span>
+      </div>
+
+      <nav class="nav-grid">
+        <a href="#section-welcome" class="nav-card" data-go="welcome">1. Warm-Up</a>
+        <a href="#section-core" class="nav-card" data-go="core">2. Core Concepts</a>
+        <a href="#section-reinforce" class="nav-card" data-go="reinforce">3. Reinforcement</a>
+        <a href="#section-eob" class="nav-card" data-go="eob">4. EOB Deep Dive</a>
+        <a href="#section-work" class="nav-card" data-go="work">5. Workplace Practice</a>
+        <a href="#section-reflect" class="nav-card" data-go="reflect">6. Reflection Check</a>
+        <a href="#section-report" class="nav-card" data-go="report">7. End Report</a>
+      </nav>
+    </header>
+
+    <section id="section-welcome" class="section glass active">
+      <div class="section-top">
+        <div>
+          <h2>1. Warm-Up</h2>
+          <p>Start with what you think these ideas mean. This is low stakes and meant to activate prior knowledge before the lesson builds stronger understanding.</p>
+          <div class="chip-row">
+            <span class="chip">Prior knowledge</span>
+            <span class="chip">Prediction</span>
+            <span class="chip">Low-stakes start</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card tone-violet">
+          <h3>Quick prediction</h3>
+          <div class="prompt-box" style="margin:12px 0 14px;">
+            Choose the ideas that already sound true to you. You can choose more than one.
+          </div>
+
+          <div class="predict-grid" id="predictGrid">
+            <button class="predict-btn" data-predict="premium">Premium is what you pay to keep insurance active.</button>
+            <button class="predict-btn" data-predict="deductible">Deductible is what you pay first before the plan begins sharing eligible costs.</button>
+            <button class="predict-btn" data-predict="copay">Copay is usually a fixed amount instead of a percentage.</button>
+          </div>
+
+          <div class="feedback info show" style="margin-top:14px;">
+            All three statements are true. This warm-up just helps anchor the big ideas before practice.
+          </div>
+        </div>
+
+        <div class="card tone-cyan">
+          <h3>Insurance in plain language</h3>
+          <p class="big" style="margin-top:10px;">
+            Insurance is a system for sharing risk. People pay into it so one person's medical cost does not fall only on that one person.
+          </p>
+
+          <div class="timeline" style="margin-top:14px;">
+            <div class="step">
+              <div class="num">1</div>
+              <div><strong>People join a plan</strong><div class="mini">They pay premiums to keep coverage active.</div></div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div><strong>Care is received</strong><div class="mini">The provider documents services and submits a claim.</div></div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div><strong>The payer processes the claim</strong><div class="mini">This is adjudication.</div></div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div><strong>The EOB explains the result</strong><div class="mini">It explains processing. It is not the bill itself.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <button class="btn-secondary" disabled>Back</button>
+        <button class="btn-violet" data-next="core">Go to Core Concepts</button>
+      </div>
+    </section>
+
+    <section id="section-core" class="section glass">
+      <div class="section-top">
+        <div>
+          <h2>2. Core Concept Builder</h2>
+          <p>Flip cards to study each term, then answer concept checks. The answer options and correct-answer positions are randomized.</p>
+          <div class="chip-row">
+            <span class="chip">Meaning</span>
+            <span class="chip">Contrast</span>
+            <span class="chip">Mini scenario</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-grid" id="conceptGrid"></div>
+
+      <div style="margin-top:22px;" class="qa-box">
+        <h3>Core Concept Checks</h3>
+        <div class="mini">Read carefully. Answers are randomized every time the page loads.</div>
+        <div id="coreQuiz"></div>
+      </div>
+
+      <div class="footer-nav">
+        <button class="btn-secondary" data-prev="welcome">Back</button>
+        <button class="btn-cyan" data-next="reinforce">Go to Reinforcement</button>
+      </div>
+    </section>
+
+    <section id="section-reinforce" class="section glass">
+      <div class="section-top">
+        <div>
+          <h2>3. Interactive Reinforcement</h2>
+          <p>Use the concepts in different ways so they stick: matching, scenario reasoning, and misconception correction.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card tone-green">
+          <h3>Match the term to the idea</h3>
+          <p class="mini" style="margin:10px 0 14px;">Drag a term from the left and drop it into the best match.</p>
+          <div class="match-area">
+            <div class="bank" id="dragBank"></div>
+            <div class="dropzones" id="dropZones"></div>
+          </div>
+          <div id="matchFeedback" class="feedback info"></div>
+        </div>
+
+        <div class="stack">
+          <div class="work-case">
+            <h3>Scenario reasoning</h3>
+            <div id="scenarioQuestion" class="big"></div>
+            <div id="scenarioOptions" class="options" style="margin-top:8px;"></div>
+            <div id="scenarioFeedback" class="feedback"></div>
+            <div><button class="btn-secondary" id="nextScenario">Next Scenario</button></div>
+          </div>
+
+          <div class="card tone-amber">
+            <h3>Common mix-up to remember</h3>
+            <div class="prompt-box">
+              <strong>Copay</strong> = fixed amount<br>
+              <strong>Coinsurance</strong> = percentage share
+              <br><br>
+              That difference is one of the most important distinctions in this lesson.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <button class="btn-secondary" data-prev="core">Back</button>
+        <button class="btn-primary" data-next="eob">Go to EOB Deep Dive</button>
+      </div>
+    </section>
+
+    <section id="section-eob" class="section glass">
+      <div class="section-top">
+        <div>
+          <h2>4. EOB Deep Dive</h2>
+          <p>Inspect the EOB like a puzzle. Click parts of the mock EOB to see what they mean, then answer interpretation questions.</p>
+          <div class="chip-row">
+            <span class="chip">Inspect</span>
+            <span class="chip">Interpret</span>
+            <span class="chip">Correct misconceptions</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="eob-shell">
+        <div class="card tone-cyan">
+          <div class="eob">
+            <div class="eob-head">
+              <h3>Mock Explanation of Benefits</h3>
+              <div class="eob-note">Service date: 04/15/2026 • Office visit and lab work • This explains claim processing. It is not the bill.</div>
+            </div>
+
+            <div class="eob-body">
+              <div class="eob-row">
+                <div class="eob-cell header">Description</div>
+                <div class="eob-cell header">Billed</div>
+                <div class="eob-cell header">Allowed</div>
+                <div class="eob-cell header">Plan Paid</div>
+                <div class="eob-cell header">Patient Owes</div>
+              </div>
+
+              <div class="eob-row">
+                <div class="eob-cell" data-eob="service">Established office visit</div>
+                <div class="eob-cell" data-eob="billed1">$180</div>
+                <div class="eob-cell" data-eob="allowed1">$120</div>
+                <div class="eob-cell" data-eob="paid1">$80</div>
+                <div class="eob-cell" data-eob="patient1">$40</div>
+              </div>
+
+              <div class="eob-row">
+                <div class="eob-cell" data-eob="service2">Lab panel</div>
+                <div class="eob-cell" data-eob="billed2">$95</div>
+                <div class="eob-cell" data-eob="allowed2">$60</div>
+                <div class="eob-cell" data-eob="paid2">$0</div>
+                <div class="eob-cell" data-eob="patient2">$60</div>
+              </div>
+
+              <div class="eob-row">
+                <div class="eob-cell header">Claim Summary</div>
+                <div class="eob-cell" data-eob="billedTotal">$275 billed</div>
+                <div class="eob-cell" data-eob="allowedTotal">$180 allowed</div>
+                <div class="eob-cell" data-eob="planTotal">$80 paid by payer</div>
+                <div class="eob-cell" data-eob="patientTotal">$100 patient responsibility</div>
+              </div>
+
+              <div class="eob-row">
+                <div class="eob-cell" data-eob="deductible">Deductible applied: $60</div>
+                <div class="eob-cell" data-eob="coinsurance">Coinsurance: $20</div>
+                <div class="eob-cell" data-eob="copay">Copay: $20</div>
+                <div class="eob-cell" data-eob="adjustment">Contractual adjustment: $95</div>
+                <div class="eob-cell" data-eob="notbill">EOB ≠ bill</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card tone-violet inspect-panel">
+          <h3>Inspect panel</h3>
+          <p class="mini" style="margin:8px 0 12px;">Click any EOB item to see what it means and why it matters.</p>
+          <div id="inspectResult" class="prompt-box">Start by clicking any part of the EOB.</div>
+
+          <div class="qa-box" style="margin-top:14px;">
+            <h3>EOB Interpretation Checks</h3>
+            <div id="eobQuiz"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <button class="btn-secondary" data-prev="reinforce">Back</button>
+        <button class="btn-green" data-next="work">Go to Workplace Practice</button>
+      </div>
+    </section>
+
+    <section id="section-work" class="section glass">
+      <div class="section-top">
+        <div>
+          <h2>5. Real-World Workplace Practice</h2>
+          <p>Short cases focused on what a medical assistant or front-desk staff member should understand or explain clearly.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="work-case">
+          <h3>Front-desk judgment case</h3>
+          <div id="workQuestion" class="big"></div>
+          <div id="workOptions" class="options"></div>
+          <div id="workFeedback" class="feedback"></div>
+          <div><button class="btn-secondary" id="nextWork">Next Workplace Case</button></div>
+        </div>
+
+        <div class="card tone-green">
+          <h3>What staff should understand</h3>
+          <div class="timeline" style="margin-top:12px;">
+            <div class="step">
+              <div class="num">A</div>
+              <div><strong>Do not confuse EOB with a bill</strong><div class="mini">The EOB explains how the payer processed the claim.</div></div>
+            </div>
+            <div class="step">
+              <div class="num">B</div>
+              <div><strong>Allowed amount matters</strong><div class="mini">The payer may recognize less than the provider billed.</div></div>
+            </div>
+            <div class="step">
+              <div class="num">C</div>
+              <div><strong>Patient responsibility has logic</strong><div class="mini">It may come from deductible, copay, coinsurance, or non-covered amounts.</div></div>
+            </div>
+            <div class="step">
+              <div class="num">D</div>
+              <div><strong>Use clear language with patients</strong><div class="mini">Simple explanation reduces confusion and builds trust.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <button class="btn-secondary" data-prev="eob">Back</button>
+        <button class="btn-amber" data-next="reflect">Go to Reflection Check</button>
+      </div>
+    </section>
+
+    <section id="section-reflect" class="section glass">
+      <div class="section-top">
+        <div>
+          <h2>6. Reflection + Learning Check</h2>
+          <p>Mark your confidence now. This helps generate a more specific end report instead of generic feedback.</p>
+        </div>
+      </div>
+
+      <div class="confidence" id="confidenceBox"></div>
+
+      <div class="card tone-rose" style="margin-top:18px;">
+        <h3>Typed reflection</h3>
+        <p class="mini" style="margin:8px 0 12px;">Write what helped you, what is still confusing, and what you want to review.</p>
+        <textarea id="studentReflection" placeholder="Example: The mock EOB helped me understand billed amount versus allowed amount. I still want more practice with deductible versus coinsurance."></textarea>
+      </div>
+
+      <div class="footer-nav">
+        <button class="btn-secondary" data-prev="work">Back</button>
+        <button class="btn-rose" data-next="report">Go to End Report</button>
+      </div>
+    </section>
+
+    <section id="section-report" class="section glass">
+      <div class="section-top">
+        <div>
+          <h2>7. End-of-Lesson Report</h2>
+          <p>Generate a performance summary, add your feedback, and record a voice reflection. Everything can be copied cleanly for Amplify.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="stack">
+          <div class="card tone-violet">
+            <h3>Generate performance summary</h3>
+            <p class="mini" style="margin:8px 0 12px;">This pulls from your work across the lesson.</p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button id="generateSummary" class="btn-violet">Generate Summary</button>
+              <button id="copySummary" class="btn-secondary">Copy Summary</button>
+            </div>
+            <div class="statusline" id="summaryStatus"></div>
+            <textarea id="summaryOutput" class="output" placeholder="Your performance summary will appear here."></textarea>
+          </div>
+
+          <div class="card tone-cyan">
+            <h3>Student feedback for the teacher</h3>
+            <p class="mini" style="margin:8px 0 12px;">What worked? What did not work? What should be reviewed more?</p>
+            <textarea id="teacherFeedback" placeholder="Example: The click-to-inspect EOB was the most helpful part. I want more quick examples that compare copay and coinsurance."></textarea>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+              <button id="copyReflection" class="btn-cyan">Copy Reflection</button>
+              <button id="copyEverything" class="btn-amber">Copy Everything</button>
+            </div>
+            <div class="statusline" id="copyStatus"></div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="card tone-green">
+            <h3>Voice reflection</h3>
+            <p class="mini" style="margin:8px 0 12px;">Speak about what you learned, what still feels confusing, and what helped you understand the lesson.</p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button id="startRecord" class="btn-green">Start Recording</button>
+              <button id="stopRecord" class="btn-secondary" disabled>Stop</button>
+              <button id="clearRecord" class="btn-rose" disabled>Clear Recording</button>
+            </div>
+            <div class="statusline" id="recordStatus">Browser microphone tool is ready if your browser allows it.</div>
+            <audio id="audioPlayback" controls style="display:none;"></audio>
+
+            <div class="prompt-box" style="margin-top:14px;">
+              Suggested reflection prompt:
+              <br><br>
+              “Today I learned that the EOB explains how a claim was processed, and that billed amount is not the same as allowed amount. I still need practice with ________. The part that helped me most was ________.”
+            </div>
+          </div>
+
+          <div class="card tone-amber">
+            <h3>Mastery snapshot</h3>
+            <div id="finalBadges" class="badge-row">
+              <span class="badge">Generate your summary to see mastery tags.</span>
+            </div>
+            <p class="copy-note" style="margin-top:14px;">Generate the summary first, then add reflection and use Copy Everything.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <button class="btn-secondary" data-prev="reflect">Back</button>
+        <button class="btn-primary" id="finishButton">Refresh Report</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const storageKey = "insurance_eob_lab_progress_v3";
+
+    const conceptCards = [
+      { term:"Premium", frontHint:"Keeps the plan active", back:`<strong>Plain meaning:</strong> The amount paid to keep insurance coverage active, whether or not care is used.<br><br><strong>Why it matters:</strong> No premium, no active coverage.<br><br><strong>Mini example:</strong> A patient pays monthly so the plan stays in force.` },
+      { term:"Deductible", frontHint:"Paid first", back:`<strong>Plain meaning:</strong> The amount the patient pays first before the insurance plan begins sharing eligible costs.<br><br><strong>Why it matters:</strong> It affects why the patient may owe more early in the year.<br><br><strong>Mini example:</strong> Lab work may apply to deductible before the plan pays.` },
+      { term:"Copay", frontHint:"Fixed amount", back:`<strong>Plain meaning:</strong> A set dollar amount paid for a covered service.<br><br><strong>Why it matters:</strong> It is predictable and not a percentage.<br><br><strong>Mini example:</strong> Specialist visit copay: $25.` },
+      { term:"Coinsurance", frontHint:"Percentage share", back:`<strong>Plain meaning:</strong> The patient's percentage share of an allowed amount after deductible rules are met.<br><br><strong>Why it matters:</strong> Students often confuse it with copay.<br><br><strong>Mini example:</strong> Patient pays 20% of the allowed amount.` },
+      { term:"Out-of-Pocket Cost", frontHint:"What the patient pays", back:`<strong>Plain meaning:</strong> The patient's own spending for healthcare costs such as deductible, copay, and coinsurance.<br><br><strong>Why it matters:</strong> Patients care most about what they personally owe.<br><br><strong>Mini example:</strong> A patient pays $20 copay and later $60 toward deductible.` },
+      { term:"Policyholder", frontHint:"Owns the policy", back:`<strong>Plain meaning:</strong> The person who owns the insurance policy or contract.<br><br><strong>Why it matters:</strong> Not always the same as the patient.<br><br><strong>Mini example:</strong> A parent may be the policyholder for a child.` },
+      { term:"Subscriber", frontHint:"Primary enrollee", back:`<strong>Plain meaning:</strong> The primary person enrolled in the insurance plan.<br><br><strong>Why it matters:</strong> Subscriber information is often central in insurance records.<br><br><strong>Mini example:</strong> An employee carries the family plan.` },
+      { term:"Dependent", frontHint:"Covered under another person's plan", back:`<strong>Plain meaning:</strong> A person covered under the subscriber or policyholder's insurance plan.<br><br><strong>Why it matters:</strong> The patient may be a dependent and not the subscriber.<br><br><strong>Mini example:</strong> A child on a parent's plan.` },
+      { term:"Payer", frontHint:"Processes the claim", back:`<strong>Plain meaning:</strong> The insurance company or entity that processes and pays according to policy rules.<br><br><strong>Why it matters:</strong> The payer decides allowed amount and payment under the plan.<br><br><strong>Mini example:</strong> The payer adjudicates the claim.` },
+      { term:"Provider", frontHint:"Gives the care", back:`<strong>Plain meaning:</strong> The healthcare professional or facility delivering the service.<br><br><strong>Why it matters:</strong> The provider bills for the service rendered.<br><br><strong>Mini example:</strong> A clinic submits a claim after an office visit.` },
+      { term:"Claim", frontHint:"Request for payment", back:`<strong>Plain meaning:</strong> A request sent to the payer for payment after services are provided.<br><br><strong>Why it matters:</strong> Without a claim, the payer cannot process the service.<br><br><strong>Mini example:</strong> The office sends a claim for the visit and labs.` },
+      { term:"Adjudication", frontHint:"How the payer decides", back:`<strong>Plain meaning:</strong> The payer's process of reviewing a claim to decide what is covered, allowed, paid, and owed by the patient.<br><br><strong>Why it matters:</strong> This is how the final numbers on the EOB are created.<br><br><strong>Mini example:</strong> The payer applies deductible and coinsurance rules.` },
+      { term:"Explanation of Benefits (EOB)", frontHint:"Explains claim processing", back:`<strong>Plain meaning:</strong> A document showing how the payer processed the claim.<br><br><strong>Why it matters:</strong> It helps the patient understand billed amount, allowed amount, plan payment, and patient responsibility.<br><br><strong>Not:</strong> The EOB is not the provider's bill.` }
+    ];
+
+    const coreQuizData = [
+      {
+        id:"cq1", section:"core",
+        question:"A patient pays a monthly amount to keep the insurance plan active even during a month when no care is used. What is that payment called?",
+        correct:"Premium",
+        rationale:"Correct. Premium keeps coverage active. It is not tied to whether the patient used a service that month.",
+        distractors:[
+          {text:"Deductible", why:"Not this. Deductible is what the patient pays first before insurance begins sharing eligible costs."},
+          {text:"Copay", why:"Not this. Copay is a fixed amount for a covered service."},
+          {text:"Coinsurance", why:"Not this. Coinsurance is a percentage share of an allowed amount."}
+        ]
+      },
+      {
+        id:"cq2", section:"core",
+        question:"Which term best describes a fixed amount a patient pays for a covered visit, such as $20 at check-in?",
+        correct:"Copay",
+        rationale:"Correct. A copay is a fixed dollar amount. Fixed amount is the key clue.",
+        distractors:[
+          {text:"Coinsurance", why:"Not this. Coinsurance is a percentage, not a fixed amount."},
+          {text:"Deductible", why:"Not this. Deductible is the amount paid first before the plan shares eligible costs."},
+          {text:"Premium", why:"Not this. Premium keeps the policy active."}
+        ]
+      },
+      {
+        id:"cq3", section:"core",
+        question:"Which statement best describes coinsurance?",
+        correct:"The patient's percentage share of an allowed amount",
+        rationale:"Correct. Coinsurance is expressed as a percentage, such as 20% of the allowed amount.",
+        distractors:[
+          {text:"The monthly amount paid to maintain coverage", why:"That is premium."},
+          {text:"The fixed office visit amount due at check-in", why:"That is usually a copay."},
+          {text:"The document that explains claim processing", why:"That is the EOB."}
+        ]
+      },
+      {
+        id:"cq4", section:"core",
+        question:"The person receiving care is covered under her father's insurance plan. She is most accurately described as the:",
+        correct:"Dependent",
+        rationale:"Correct. A dependent is covered under another person's plan.",
+        distractors:[
+          {text:"Payer", why:"Not this. The payer processes claims."},
+          {text:"Provider", why:"Not this. The provider gives the care."},
+          {text:"Adjudicator", why:"Not this. Adjudication is the process, not the patient's role."}
+        ]
+      },
+      {
+        id:"cq5", section:"core",
+        question:"What is the best description of adjudication?",
+        correct:"The payer's review process that determines coverage, payment, and patient responsibility",
+        rationale:"Correct. Adjudication is the payer's processing of the claim.",
+        distractors:[
+          {text:"The provider's exam of the patient", why:"That is clinical care, not adjudication."},
+          {text:"The patient's monthly payment to keep the plan", why:"That is premium."},
+          {text:"The amount written on the provider's invoice before insurance", why:"That is billed amount, not adjudication."}
+        ]
+      }
+    ];
+
+    const matchItems = [
+      {term:"Premium", target:"Keeps insurance active"},
+      {term:"Deductible", target:"Patient pays first before the plan shares eligible costs"},
+      {term:"Copay", target:"Fixed dollar amount for a covered service"},
+      {term:"Coinsurance", target:"Percentage share of an allowed amount"}
+    ];
+
+    const scenarioData = [
+      {
+        id:"rs1", section:"reinforce",
+        question:"Maria says, “My plan says specialist visits are $35 each time.” Which term best fits that statement?",
+        correct:"Copay",
+        rationale:"Correct. A set amount due for a covered visit is a copay.",
+        distractors:[
+          {text:"Coinsurance", why:"Coinsurance is a percentage, not a fixed number like $35."},
+          {text:"Premium", why:"Premium is paid to keep coverage active."},
+          {text:"Deductible", why:"Deductible is an amount paid before insurance begins sharing eligible costs."}
+        ]
+      },
+      {
+        id:"rs2", section:"reinforce",
+        question:"At the start of the year, the patient owes more because the plan requires an amount to be paid first before sharing eligible costs. What concept is most directly involved?",
+        correct:"Deductible",
+        rationale:"Correct. Early-year patient costs often point to the deductible not yet being met.",
+        distractors:[
+          {text:"Premium", why:"Premium maintains coverage but does not describe paying first before sharing."},
+          {text:"Subscriber", why:"Subscriber is a plan role, not a payment rule."},
+          {text:"Claim", why:"A claim is a request for payment sent to the payer."}
+        ]
+      },
+      {
+        id:"rs3", section:"reinforce",
+        question:"The clinic sends information to the insurance company requesting payment for services provided. What is being sent?",
+        correct:"Claim",
+        rationale:"Correct. The provider submits a claim for payment processing.",
+        distractors:[
+          {text:"EOB", why:"The EOB comes after the payer processes the claim."},
+          {text:"Premium", why:"Premium is not sent by the clinic as a request for payment for care."},
+          {text:"Dependent", why:"Dependent is a covered family member, not a transaction."}
+        ]
+      }
+    ];
+
+    const eobInfo = {
+      service:"This line identifies the service performed. The EOB is organized around services that were billed and processed.",
+      service2:"This is a second service line. Many EOBs show more than one service on the same claim.",
+      billed1:"Billed amount is what the provider charged for the office visit before payer processing.",
+      billed2:"Billed amount is what the provider charged for the lab panel before payer processing.",
+      allowed1:"Allowed amount is what the payer recognizes under the contract for that service. It may be less than the billed amount.",
+      allowed2:"Allowed amount is what the payer recognizes for the lab. It controls the cost-sharing logic more than the billed amount does.",
+      paid1:"Plan paid means the amount the payer paid after applying the plan rules.",
+      paid2:"Here the plan paid $0 for the lab because the deductible applied first, so the patient owed the allowed amount for that service.",
+      patient1:"Patient owes $40 here. In this mock example, that comes from a $20 copay plus $20 coinsurance.",
+      patient2:"Patient owes $60 here because it was applied to deductible in this example.",
+      billedTotal:"The total billed across these services is $275. This is what was charged, not what the payer necessarily recognizes.",
+      allowedTotal:"The total allowed amount is $180. This is the contracted amount that matters for cost sharing.",
+      planTotal:"The payer paid $80 in total after adjudication.",
+      patientTotal:"The patient responsibility total is $100 in this example.",
+      deductible:"Deductible applied means part of the patient's responsibility came from the amount they must pay before the plan starts sharing eligible costs.",
+      coinsurance:"Coinsurance means a percentage share. In this mock example, that share contributed $20.",
+      copay:"Copay means a fixed amount. In this mock example, the office visit required a $20 copay.",
+      adjustment:"Contractual adjustment is the difference between billed and allowed amounts that results from the payer-provider contract. Here it totals $95.",
+      notbill:"Very important: the EOB explains claim processing. It is not itself the provider's bill."
+    };
+
+    const eobQuizData = [
+      {
+        id:"eq1", section:"eob",
+        question:"On an EOB, what does allowed amount represent?",
+        correct:"The amount the payer recognizes under the contract for the service",
+        rationale:"Correct. Allowed amount is the recognized contracted amount, which may be lower than what the provider billed.",
+        distractors:[
+          {text:"The exact amount the patient already paid at the front desk", why:"Not necessarily. Allowed amount is not the same as an upfront payment."},
+          {text:"The provider's original charge before the claim was processed", why:"That is billed amount."},
+          {text:"The provider's final bill after collection", why:"An EOB is not the final bill."}
+        ]
+      },
+      {
+        id:"eq2", section:"eob",
+        question:"Which statement is true about an Explanation of Benefits?",
+        correct:"It explains how the claim was processed, but it is not the bill itself",
+        rationale:"Correct. This distinction is one of the most important takeaways in medical billing literacy.",
+        distractors:[
+          {text:"It is the same as a provider invoice", why:"Wrong. A provider invoice requests payment; an EOB explains claim processing."},
+          {text:"It is sent by the provider to set the premium", why:"Wrong. Premium is not established through an EOB."},
+          {text:"It replaces the need for claim adjudication", why:"Wrong. The EOB is the result of adjudication."}
+        ]
+      },
+      {
+        id:"eq3", section:"eob",
+        question:"In the mock EOB, why is the billed amount higher than the allowed amount?",
+        correct:"Because the provider charged one amount, but the payer contract recognizes a lower allowed amount",
+        rationale:"Correct. The difference often becomes a contractual adjustment with in-network care.",
+        distractors:[
+          {text:"Because the patient paid the bill twice", why:"No. That does not explain billed versus allowed amount."},
+          {text:"Because the subscriber changed to dependent status", why:"Plan roles do not directly create billed-versus-allowed differences."},
+          {text:"Because coinsurance increases the billed amount", why:"Coinsurance affects patient share, not what the provider initially charged."}
+        ]
+      }
+    ];
+
+    const workCases = [
+      {
+        id:"wk1", section:"work",
+        question:"A patient says, “My EOB says the provider billed $180, but the allowed amount is only $120. Why?” What is the best response?",
+        correct:"The provider's charge and the payer's allowed amount are not always the same; the allowed amount is the contracted recognized amount",
+        rationale:"Correct. This explains the core idea clearly and accurately.",
+        distractors:[
+          {text:"Because the patient is automatically responsible for the difference between billed and allowed in every case", why:"Too broad and often wrong. In-network contractual adjustments often prevent billing that difference."},
+          {text:"Because billed amount means the payer already approved full payment", why:"Wrong. Billed amount is just the original charge."},
+          {text:"Because the EOB is the final invoice from the provider", why:"Wrong. EOB is not the bill."}
+        ]
+      },
+      {
+        id:"wk2", section:"work",
+        question:"A patient sees $60 marked as deductible applied on the EOB and asks what that means. Which explanation is best?",
+        correct:"It means $60 of the patient's responsibility went toward the amount they must pay first before the plan begins sharing eligible costs",
+        rationale:"Correct. That is the clearest patient-friendly explanation.",
+        distractors:[
+          {text:"It means the payer added a penalty fee", why:"Wrong. Deductible is a standard plan rule, not a penalty."},
+          {text:"It means the monthly premium increased by $60", why:"Wrong. Deductible and premium are different concepts."},
+          {text:"It means the provider entered the wrong code", why:"Not supported by the information given."}
+        ]
+      },
+      {
+        id:"wk3", section:"work",
+        question:"Which statement would be most important to remember before explaining an EOB to a patient at the front desk?",
+        correct:"An EOB is an explanation of claim processing and should not be confused with a bill",
+        rationale:"Correct. This prevents one of the most common misunderstandings.",
+        distractors:[
+          {text:"Coinsurance and copay always mean the same thing", why:"Wrong. They are different."},
+          {text:"Allowed amount is always the same as billed amount", why:"Wrong. Often it is not."},
+          {text:"The policyholder must always be the patient", why:"Wrong. A patient can be a dependent."}
+        ]
+      }
+    ];
+
+    const confidencePrompts = [
+      "I can explain premium in plain language.",
+      "I can distinguish deductible from copay.",
+      "I can distinguish copay from coinsurance.",
+      "I understand the difference between billed amount and allowed amount.",
+      "I understand that an EOB is not the same as a bill.",
+      "I can explain patient responsibility in a simple way."
+    ];
+
+    const state = {
+      soundOn:true,
+      currentSection:"welcome",
+      answered:{},
+      sectionStats:{
+        welcome:{done:0,total:1},
+        core:{done:0,total:coreQuizData.length},
+        reinforce:{done:0,total:scenarioData.length + matchItems.length},
+        eob:{done:0,total:eobQuizData.length + 4},
+        work:{done:0,total:workCases.length},
+        reflect:{done:0,total:confidencePrompts.length},
+        report:{done:0,total:1}
+      },
+      scores:{ core:0, reinforce:0, eob:0, work:0 },
+      confidence:{},
+      warmupSelections:0,
+      currentScenarioIndex:0,
+      currentWorkIndex:0,
+      mediaRecorder:null,
+      audioChunks:[],
+      audioBlob:null
+    };
+
+    function $(sel, root=document){ return root.querySelector(sel); }
+    function $$(sel, root=document){ return [...root.querySelectorAll(sel)]; }
+
+    function shuffle(array){
+      const arr = [...array];
+      for(let i = arr.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function saveState(){
+      const snapshot = {
+        soundOn:state.soundOn,
+        currentSection:state.currentSection,
+        answered:state.answered,
+        sectionStats:state.sectionStats,
+        scores:state.scores,
+        confidence:state.confidence,
+        warmupSelections:state.warmupSelections,
+        currentScenarioIndex:state.currentScenarioIndex,
+        currentWorkIndex:state.currentWorkIndex,
+        studentReflection:$("#studentReflection").value,
+        teacherFeedback:$("#teacherFeedback").value,
+        summaryOutput:$("#summaryOutput").value
+      };
+      localStorage.setItem(storageKey, JSON.stringify(snapshot));
+    }
+
+    function loadState(){
+      const raw = localStorage.getItem(storageKey);
+      if(!raw) return;
+      try{
+        const saved = JSON.parse(raw);
+        Object.assign(state, {
+          soundOn:saved.soundOn ?? true,
+          currentSection:saved.currentSection ?? "welcome",
+          answered:saved.answered ?? {},
+          sectionStats:saved.sectionStats ?? state.sectionStats,
+          scores:saved.scores ?? state.scores,
+          confidence:saved.confidence ?? {},
+          warmupSelections:saved.warmupSelections ?? 0,
+          currentScenarioIndex:saved.currentScenarioIndex ?? 0,
+          currentWorkIndex:saved.currentWorkIndex ?? 0
+        });
+        requestAnimationFrame(() => {
+          if(saved.studentReflection) $("#studentReflection").value = saved.studentReflection;
+          if(saved.teacherFeedback) $("#teacherFeedback").value = saved.teacherFeedback;
+          if(saved.summaryOutput) $("#summaryOutput").value = saved.summaryOutput;
+        });
+      }catch(e){
+        console.error(e);
+      }
+    }
+
+    function resetState(){
+      localStorage.removeItem(storageKey);
+      location.reload();
+    }
+
+    function playTone(type="good"){
+      if(!state.soundOn) return;
+      try{
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if(!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if(type === "good"){
+          osc.frequency.setValueAtTime(720, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(980, ctx.currentTime + .13);
+        } else if(type === "bad"){
+          osc.frequency.setValueAtTime(280, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(180, ctx.currentTime + .16);
+        } else {
+          osc.frequency.setValueAtTime(520, ctx.currentTime);
+        }
+
+        osc.type = "sine";
+        gain.gain.setValueAtTime(.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(.06, ctx.currentTime + .01);
+        gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime + .22);
+        osc.start();
+        osc.stop(ctx.currentTime + .24);
+      }catch(e){}
+    }
+
+    function updateProgress(){
+      const totals = Object.values(state.sectionStats).reduce((acc, s) => {
+        acc.done += s.done;
+        acc.total += s.total;
+        return acc;
+      }, {done:0,total:0});
+      const percent = Math.round((totals.done / totals.total) * 100);
+      $("#overallBar").style.width = percent + "%";
+      $("#overallProgressText").textContent = percent + "%";
+
+      let mastery = "Just getting started";
+      const overallScore = state.scores.core + state.scores.reinforce + state.scores.eob + state.scores.work;
+      const overallTotal = coreQuizData.length + scenarioData.length + eobQuizData.length + workCases.length + 1;
+      const ratio = overallScore / overallTotal;
+      if(percent > 85 && ratio >= .75) mastery = "Strong understanding";
+      else if(percent > 45) mastery = "Developing understanding";
+      else mastery = "Building foundations";
+      $("#masteryText").textContent = mastery;
+
+      const badges = [];
+      badges.push(`<span class="badge">${percent}% complete</span>`);
+      if(state.sectionStats.core.done === state.sectionStats.core.total) badges.push(`<span class="badge strong">Core concepts done</span>`);
+      if(state.sectionStats.eob.done >= 4) badges.push(`<span class="badge strong">EOB explorer active</span>`);
+      if(Object.keys(state.confidence).length >= 4) badges.push(`<span class="badge dev">Reflection in progress</span>`);
+      if($("#summaryOutput").value.trim()) badges.push(`<span class="badge strong">Report generated</span>`);
+      $("#badgeRow").innerHTML = badges.join("");
+    }
+
+    function setSection(name){
+      state.currentSection = name;
+      $$(".section").forEach(s => s.classList.remove("active"));
+      $("#section-" + name).classList.add("active");
+      saveState();
+      updateProgress();
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    function markSectionDone(section, delta=1){
+      const stat = state.sectionStats[section];
+      if(!stat) return;
+      stat.done = Math.min(stat.total, stat.done + delta);
+      updateProgress();
+      saveState();
+    }
+
+    function answerAlreadyCounted(id){
+      return !!state.answered[id];
+    }
+
+    function registerAnswer({id, section, correct}){
+      if(answerAlreadyCounted(id)) return;
+      state.answered[id] = true;
+      if(correct && state.scores[section] !== undefined) state.scores[section] += 1;
+      markSectionDone(section, 1);
+    }
+
+    function copyText(value, statusEl, label){
+      navigator.clipboard.writeText(value).then(() => {
+        statusEl.textContent = label + " copied.";
+        playTone("good");
+      }).catch(() => {
+        statusEl.textContent = "Copy failed. You can still copy manually.";
+      });
+    }
+
+    function renderConceptCards(){
+      const wrap = $("#conceptGrid");
+      wrap.innerHTML = conceptCards.map((c) => `
+        <div class="concept-card" tabindex="0" role="button" aria-label="Flip card for ${c.term}">
+          <div class="inner">
+            <div class="concept-face concept-front">
+              <div>
+                <div class="term">${c.term}</div>
+                <p class="mini" style="margin-top:8px;">${c.frontHint}</p>
+              </div>
+              <div class="tap">Tap or press Enter to flip</div>
+            </div>
+
+            <div class="concept-face concept-back">
+              <div class="back-content mini">
+                ${c.back}
+              </div>
+              <div class="tap">Scroll to read • tap outside text to flip back</div>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      $$(".concept-card").forEach(card => {
+        const backContent = $(".back-content", card);
+
+        card.addEventListener("click", (e) => {
+          if (card.classList.contains("flipped") && backContent && backContent.contains(e.target)) return;
+          card.classList.toggle("flipped");
+        });
+
+        card.addEventListener("keydown", (e) => {
+          if(e.key === "Enter" || e.key === " "){
+            e.preventDefault();
+            card.classList.toggle("flipped");
+          }
+        });
+      });
+    }
+
+    function createQuestionHTML(q, index){
+      const options = shuffle([
+        {text:q.correct, correct:true, why:q.rationale},
+        ...q.distractors.map(d => ({text:d.text, correct:false, why:d.why}))
+      ]);
+
+      return `
+        <div class="qa-box" data-qid="${q.id}" style="margin-top:${index===0 ? '14px' : '18px'};">
+          <div><h4 style="font-size:1.06rem; line-height:1.55;">${index + 1}. ${q.question}</h4></div>
+          <div class="options">
+            ${options.map((opt, idx) => `
+              <button class="option" type="button" data-option="${idx}" data-correct="${opt.correct}" data-why="${encodeURIComponent(opt.why)}">${opt.text}</button>
+            `).join("")}
+          </div>
+          <div class="feedback" aria-live="polite"></div>
+        </div>
+      `;
+    }
+
+    function bindQuestionInteractions(root, sectionName){
+      $$(".qa-box", root).forEach(box => {
+        const qid = box.dataset.qid;
+        const feedback = $(".feedback", box);
+        $$(".option", box).forEach(btn => {
+          if(answerAlreadyCounted(qid)) btn.disabled = true;
+          btn.addEventListener("click", () => {
+            if(answerAlreadyCounted(qid)) return;
+            const correct = btn.dataset.correct === "true";
+            registerAnswer({id:qid, section:sectionName, correct});
+            $$(".option", box).forEach(opt => {
+              opt.disabled = true;
+              if(opt.dataset.correct === "true") opt.classList.add("correct");
+            });
+            if(!correct) btn.classList.add("incorrect");
+            feedback.className = "feedback show " + (correct ? "good" : "bad");
+            feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${decodeURIComponent(btn.dataset.why)}`;
+            playTone(correct ? "good" : "bad");
+            saveState();
+          });
+        });
+      });
+    }
+
+    function renderCoreQuiz(){
+      const root = $("#coreQuiz");
+      root.innerHTML = coreQuizData.map((q, i) => createQuestionHTML(q, i)).join("");
+      bindQuestionInteractions(root, "core");
+    }
+
+    function renderMatch(){
+      const bank = $("#dragBank");
+      const zones = $("#dropZones");
+
+      bank.innerHTML = shuffle(matchItems).map(item => `
+        <div class="pill" draggable="true" data-term="${item.term}" tabindex="0">${item.term}</div>
+      `).join("");
+
+      zones.innerHTML = shuffle(matchItems).map(item => `
+        <div class="dropzone" data-target="${item.target}">
+          <strong>${item.target}</strong>
+          <div class="mini">Drop the best term here.</div>
+        </div>
+      `).join("");
+
+      let dragged = null;
+      $$(".pill", bank).forEach(pill => {
+        pill.addEventListener("dragstart", e => {
+          dragged = pill;
+          e.dataTransfer.setData("text/plain", pill.dataset.term);
+        });
+      });
+
+      $$(".dropzone", zones).forEach(zone => {
+        zone.addEventListener("dragover", e => {
+          e.preventDefault();
+          zone.classList.add("over");
+        });
+        zone.addEventListener("dragleave", () => zone.classList.remove("over"));
+        zone.addEventListener("drop", e => {
+          e.preventDefault();
+          zone.classList.remove("over");
+          if(!dragged) return;
+          const term = dragged.dataset.term;
+          const expected = matchItems.find(m => m.term === term)?.target;
+          const uniqueId = `match-${term}`;
+          if(answerAlreadyCounted(uniqueId)) return;
+
+          zone.appendChild(dragged);
+          dragged.style.cursor = "default";
+          dragged.draggable = false;
+
+          const correct = expected === zone.dataset.target;
+          registerAnswer({id:uniqueId, section:"reinforce", correct});
+          zone.classList.add(correct ? "correct" : "wrong");
+
+          const feedback = $("#matchFeedback");
+          feedback.className = "feedback show " + (correct ? "good" : "bad");
+          feedback.innerHTML = correct
+            ? `<strong>Nice.</strong> <strong>${term}</strong> matches this idea correctly.`
+            : `<strong>That pairing is off.</strong> <strong>${term}</strong> does not best match this idea.`;
+          playTone(correct ? "good" : "bad");
+          saveState();
+        });
+      });
+    }
+
+    function renderScenario(index=0){
+      const q = scenarioData[index % scenarioData.length];
+      $("#scenarioQuestion").textContent = q.question;
+      const opts = shuffle([
+        {text:q.correct, correct:true, why:q.rationale},
+        ...q.distractors.map(d => ({text:d.text, correct:false, why:d.why}))
+      ]);
+
+      $("#scenarioOptions").innerHTML = opts.map(opt => `
+        <button type="button" class="option" data-correct="${opt.correct}" data-why="${encodeURIComponent(opt.why)}">${opt.text}</button>
+      `).join("");
+
+      const feedback = $("#scenarioFeedback");
+      feedback.className = "feedback";
+      feedback.innerHTML = "";
+
+      $$(".option", $("#scenarioOptions")).forEach(btn => {
+        btn.addEventListener("click", () => {
+          if(answerAlreadyCounted(q.id)) return;
+          const correct = btn.dataset.correct === "true";
+          registerAnswer({id:q.id, section:"reinforce", correct});
+          $$(".option", $("#scenarioOptions")).forEach(o => {
+            o.disabled = true;
+            if(o.dataset.correct === "true") o.classList.add("correct");
+          });
+          if(!correct) btn.classList.add("incorrect");
+          feedback.className = "feedback show " + (correct ? "good" : "bad");
+          feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${decodeURIComponent(btn.dataset.why)}`;
+          playTone(correct ? "good" : "bad");
+          saveState();
+        });
+      });
+    }
+
+    function renderEobInspect(){
+      $$(".eob-cell[data-eob]").forEach(cell => {
+        cell.addEventListener("click", () => {
+          const key = cell.dataset.eob;
+          $("#inspectResult").innerHTML = eobInfo[key];
+          const inspectId = `inspect-${key}`;
+          if(!answerAlreadyCounted(inspectId)){
+            state.answered[inspectId] = true;
+            markSectionDone("eob", 1);
+            saveState();
+          }
+          playTone("info");
+        });
+      });
+    }
+
+    function renderEobQuiz(){
+      const root = $("#eobQuiz");
+      root.innerHTML = eobQuizData.map((q, i) => createQuestionHTML(q, i)).join("");
+      bindQuestionInteractions(root, "eob");
+    }
+
+    function renderWorkCase(index=0){
+      const q = workCases[index % workCases.length];
+      $("#workQuestion").textContent = q.question;
+
+      const opts = shuffle([
+        {text:q.correct, correct:true, why:q.rationale},
+        ...q.distractors.map(d => ({text:d.text, correct:false, why:d.why}))
+      ]);
+
+      $("#workOptions").innerHTML = opts.map(opt => `
+        <button type="button" class="option" data-correct="${opt.correct}" data-why="${encodeURIComponent(opt.why)}">${opt.text}</button>
+      `).join("");
+
+      const feedback = $("#workFeedback");
+      feedback.className = "feedback";
+      feedback.innerHTML = "";
+
+      $$(".option", $("#workOptions")).forEach(btn => {
+        btn.addEventListener("click", () => {
+          if(answerAlreadyCounted(q.id)) return;
+          const correct = btn.dataset.correct === "true";
+          registerAnswer({id:q.id, section:"work", correct});
+          $$(".option", $("#workOptions")).forEach(o => {
+            o.disabled = true;
+            if(o.dataset.correct === "true") o.classList.add("correct");
+          });
+          if(!correct) btn.classList.add("incorrect");
+          feedback.className = "feedback show " + (correct ? "good" : "bad");
+          feedback.innerHTML = `<strong>${correct ? "Correct." : "Not quite."}</strong> ${decodeURIComponent(btn.dataset.why)}`;
+          playTone(correct ? "good" : "bad");
+          saveState();
+        });
+      });
+    }
+
+    function renderConfidence(){
+      const box = $("#confidenceBox");
+      box.innerHTML = confidencePrompts.map((prompt, idx) => `
+        <div class="conf-row" data-conf-index="${idx}">
+          <div><strong>${prompt}</strong></div>
+          <div class="scale">
+            <button type="button" class="conf-btn" data-value="strong">I understand this well</button>
+            <button type="button" class="conf-btn" data-value="developing">I need more practice</button>
+            <button type="button" class="conf-btn" data-value="review">I still confuse this</button>
+          </div>
+        </div>
+      `).join("");
+
+      $$(".conf-row", box).forEach(row => {
+        const idx = row.dataset.confIndex;
+        const saved = state.confidence[idx];
+        if(saved){
+          const activeBtn = $(`.conf-btn[data-value="${saved}"]`, row);
+          if(activeBtn) activeBtn.classList.add("active");
+        }
+        $$(".conf-btn", row).forEach(btn => {
+          btn.addEventListener("click", () => {
+            const firstTime = !state.confidence[idx];
+            state.confidence[idx] = btn.dataset.value;
+            $$(".conf-btn", row).forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            if(firstTime) markSectionDone("reflect", 1);
+            saveState();
+          });
+        });
+      });
+    }
+
+    function masteryForSection(score, total){
+      const ratio = total === 0 ? 0 : score / total;
+      if(ratio >= .8) return "strong understanding";
+      if(ratio >= .5) return "developing understanding";
+      return "review needed";
+    }
+
+    function buildSummaryText(){
+      const coreMastery = masteryForSection(state.scores.core, coreQuizData.length);
+      const reinforceMastery = masteryForSection(state.scores.reinforce, scenarioData.length + 1);
+      const eobMastery = masteryForSection(state.scores.eob, eobQuizData.length + 1);
+      const workMastery = masteryForSection(state.scores.work, workCases.length);
+
+      const confidenceCounts = Object.values(state.confidence).reduce((acc, v) => {
+        acc[v] = (acc[v] || 0) + 1;
+        return acc;
+      }, {strong:0, developing:0, review:0});
+
+      const strongTopics = [];
+      const reviewTopics = [];
+
+      if(state.confidence[0] === "strong") strongTopics.push("premium");
+      if(state.confidence[1] === "strong") strongTopics.push("deductible versus copay");
+      if(state.confidence[2] === "strong") strongTopics.push("copay versus coinsurance");
+      if(state.confidence[3] === "strong") strongTopics.push("allowed amount versus billed amount");
+      if(state.confidence[4] === "strong") strongTopics.push("what an EOB is");
+      if(state.confidence[5] === "strong") strongTopics.push("patient responsibility");
+
+      if(state.confidence[0] === "review") reviewTopics.push("premium");
+      if(state.confidence[1] === "review") reviewTopics.push("deductible versus copay");
+      if(state.confidence[2] === "review") reviewTopics.push("copay versus coinsurance");
+      if(state.confidence[3] === "review") reviewTopics.push("allowed amount versus billed amount");
+      if(state.confidence[4] === "review") reviewTopics.push("EOB versus bill");
+      if(state.confidence[5] === "review") reviewTopics.push("patient responsibility");
+
+      const reflection = $("#studentReflection").value.trim();
+      const teacherFeedback = $("#teacherFeedback").value.trim();
+
+      let text = `INSURANCE BASICS & EOB LESSON SUMMARY
+
+Section Performance
+- Core concepts: ${state.scores.core}/${coreQuizData.length} (${coreMastery})
+- Reinforcement activities: ${state.scores.reinforce}/${scenarioData.length + 1} (${reinforceMastery})
+- EOB deep dive: ${state.scores.eob}/${eobQuizData.length + 1} (${eobMastery})
+- Workplace practice: ${state.scores.work}/${workCases.length} (${workMastery})
+
+What you showed
+- You worked through premium, deductible, copay, coinsurance, plan roles, claim processing, and EOB interpretation.
+- Confidence check summary:
+  • Strong understanding selections: ${confidenceCounts.strong || 0}
+  • Developing understanding selections: ${confidenceCounts.developing || 0}
+  • Review needed selections: ${confidenceCounts.review || 0}
+
+Strengths noticed
+- ${strongTopics.length ? "You showed stronger confidence in " + strongTopics.join(", ") + "." : "Keep building confidence across all areas; more repetition will help."}
+
+Recommended review
+- ${reviewTopics.length ? "You may want to review " + reviewTopics.join(", ") + "." : "No major review flags were selected in the confidence check."}
+
+Teacher-style feedback
+- You moved through concept work, scenario practice, and EOB interpretation rather than only memorizing definitions.
+- Keep focusing on the logic: billed amount is what was charged, allowed amount is what the payer recognizes, and patient responsibility may come from deductible, copay, or coinsurance.
+- One of the most important takeaways is that the EOB explains how the claim was processed. It is not the bill itself.`;
+
+      if(reflection){
+        text += `
+
+Student Reflection
+${reflection}`;
+      }
+
+      if(teacherFeedback){
+        text += `
+
+Student Feedback for Instructor
+${teacherFeedback}`;
+      }
+
+      return text;
+    }
+
+    function refreshFinalBadges(){
+      const badges = [];
+      const core = masteryForSection(state.scores.core, coreQuizData.length);
+      const eob = masteryForSection(state.scores.eob, eobQuizData.length + 1);
+      const work = masteryForSection(state.scores.work, workCases.length);
+
+      badges.push(`<span class="badge ${core === 'strong understanding' ? 'strong' : core === 'developing understanding' ? 'dev' : 'review'}">Core: ${core}</span>`);
+      badges.push(`<span class="badge ${eob === 'strong understanding' ? 'strong' : eob === 'developing understanding' ? 'dev' : 'review'}">EOB: ${eob}</span>`);
+      badges.push(`<span class="badge ${work === 'strong understanding' ? 'strong' : work === 'developing understanding' ? 'dev' : 'review'}">Workplace: ${work}</span>`);
+
+      if($("#studentReflection").value.trim()) badges.push(`<span class="badge strong">Reflection added</span>`);
+      if($("#teacherFeedback").value.trim()) badges.push(`<span class="badge dev">Teacher feedback added</span>`);
+      $("#finalBadges").innerHTML = badges.join("");
+    }
+
+    async function startRecording(){
+      const status = $("#recordStatus");
+      try{
+        const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+        state.audioChunks = [];
+        const recorder = new MediaRecorder(stream);
+        state.mediaRecorder = recorder;
+
+        recorder.ondataavailable = e => {
+          if(e.data.size > 0) state.audioChunks.push(e.data);
+        };
+
+        recorder.onstop = () => {
+          const blob = new Blob(state.audioChunks, {type:"audio/webm"});
+          state.audioBlob = blob;
+          const url = URL.createObjectURL(blob);
+          const audio = $("#audioPlayback");
+          audio.src = url;
+          audio.style.display = "block";
+          $("#clearRecord").disabled = false;
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        recorder.start();
+        $("#startRecord").disabled = true;
+        $("#stopRecord").disabled = false;
+        status.textContent = "Recording in progress...";
+        playTone("good");
+      }catch(e){
+        status.textContent = "Microphone access was denied or not supported. You can still use the typed reflection boxes.";
+      }
+    }
+
+    function stopRecording(){
+      if(state.mediaRecorder && state.mediaRecorder.state !== "inactive"){
+        state.mediaRecorder.stop();
+        $("#startRecord").disabled = false;
+        $("#stopRecord").disabled = true;
+        $("#recordStatus").textContent = "Recording stopped. You can play it back below.";
+      }
+    }
+
+    function clearRecording(){
+      state.audioBlob = null;
+      state.audioChunks = [];
+      $("#audioPlayback").pause();
+      $("#audioPlayback").removeAttribute("src");
+      $("#audioPlayback").style.display = "none";
+      $("#clearRecord").disabled = true;
+      $("#recordStatus").textContent = "Recording cleared.";
+    }
+
+    function bindNavigation(){
+      $$("[data-go]").forEach(a => {
+        a.addEventListener("click", e => {
+          e.preventDefault();
+          setSection(a.dataset.go);
+        });
+      });
+      $$("[data-next]").forEach(btn => btn.addEventListener("click", () => setSection(btn.dataset.next)));
+      $$("[data-prev]").forEach(btn => btn.addEventListener("click", () => setSection(btn.dataset.prev)));
+    }
+
+    function bindWarmup(){
+      $$(".predict-btn", $("#predictGrid")).forEach(btn => {
+        btn.addEventListener("click", () => {
+          if(!btn.classList.contains("selected")){
+            btn.classList.add("selected");
+            state.warmupSelections += 1;
+            if(state.warmupSelections === 1) markSectionDone("welcome", 1);
+            playTone("good");
+            saveState();
+          }
+        });
+      });
+    }
+
+    function bindMainControls(){
+      $("#soundToggle").addEventListener("click", () => {
+        state.soundOn = !state.soundOn;
+        $("#soundToggle").textContent = state.soundOn ? "🔊 Sound On" : "🔇 Sound Off";
+        $("#soundToggle").setAttribute("aria-pressed", String(state.soundOn));
+        saveState();
+      });
+
+      $("#resetAll").addEventListener("click", () => {
+        if(confirm("Reset all lesson progress on this device?")) resetState();
+      });
+
+      $("#nextScenario").addEventListener("click", () => {
+        state.currentScenarioIndex = (state.currentScenarioIndex + 1) % scenarioData.length;
+        renderScenario(state.currentScenarioIndex);
+        saveState();
+      });
+
+      $("#nextWork").addEventListener("click", () => {
+        state.currentWorkIndex = (state.currentWorkIndex + 1) % workCases.length;
+        renderWorkCase(state.currentWorkIndex);
+        saveState();
+      });
+
+      $("#generateSummary").addEventListener("click", () => {
+        $("#summaryOutput").value = buildSummaryText();
+        $("#summaryStatus").textContent = "Summary generated.";
+        if(!answerAlreadyCounted("report-generated")){
+          state.answered["report-generated"] = true;
+          markSectionDone("report", 1);
+        }
+        refreshFinalBadges();
+        playTone("good");
+        saveState();
+      });
+
+      $("#copySummary").addEventListener("click", () => {
+        copyText($("#summaryOutput").value.trim(), $("#summaryStatus"), "Summary");
+      });
+
+      $("#copyReflection").addEventListener("click", () => {
+        const reflectionBundle = [
+          "Typed Reflection",
+          $("#studentReflection").value.trim() || "(No typed reflection entered.)",
+          "",
+          "Feedback for Instructor",
+          $("#teacherFeedback").value.trim() || "(No teacher feedback entered.)"
+        ].join("\n");
+        copyText(reflectionBundle, $("#copyStatus"), "Reflection");
+      });
+
+      $("#copyEverything").addEventListener("click", () => {
+        const everything = [
+          $("#summaryOutput").value.trim() || "(Generate summary first.)",
+          "",
+          "Typed Reflection",
+          $("#studentReflection").value.trim() || "(No typed reflection entered.)",
+          "",
+          "Feedback for Instructor",
+          $("#teacherFeedback").value.trim() || "(No teacher feedback entered.)"
+        ].join("\n");
+        copyText(everything, $("#copyStatus"), "Everything");
+      });
+
+      $("#finishButton").addEventListener("click", () => {
+        $("#summaryOutput").value = buildSummaryText();
+        refreshFinalBadges();
+        $("#summaryStatus").textContent = "Report refreshed.";
+        playTone("good");
+        saveState();
+      });
+
+      $("#studentReflection").addEventListener("input", saveState);
+      $("#teacherFeedback").addEventListener("input", saveState);
+
+      $("#startRecord").addEventListener("click", startRecording);
+      $("#stopRecord").addEventListener("click", stopRecording);
+      $("#clearRecord").addEventListener("click", clearRecording);
+    }
+
+    function init(){
+      loadState();
+      renderConceptCards();
+      renderCoreQuiz();
+      renderMatch();
+      renderScenario(state.currentScenarioIndex);
+      renderEobInspect();
+      renderEobQuiz();
+      renderWorkCase(state.currentWorkIndex);
+      renderConfidence();
+      bindNavigation();
+      bindWarmup();
+      bindMainControls();
+
+      $("#soundToggle").textContent = state.soundOn ? "🔊 Sound On" : "🔇 Sound Off";
+      $("#soundToggle").setAttribute("aria-pressed", String(state.soundOn));
+
+      setSection(state.currentSection || "welcome");
+      refreshFinalBadges();
+      updateProgress();
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
