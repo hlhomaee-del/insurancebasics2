@@ -566,6 +566,17 @@
     .option:nth-child(4n+2){box-shadow: inset 0 0 0 1px rgba(34,211,238,.18), 0 10px 22px rgba(0,0,0,.12)}
     .option:nth-child(4n+3){box-shadow: inset 0 0 0 1px rgba(16,185,129,.16), 0 10px 22px rgba(0,0,0,.12)}
     .option:nth-child(4n+4){box-shadow: inset 0 0 0 1px rgba(245,158,11,.16), 0 10px 22px rgba(0,0,0,.12)}
+
+    .option{
+      min-height:68px;
+      display:flex;
+      align-items:center;
+    }
+    .pill.selected{
+      outline:2px solid rgba(34,211,238,.72);
+      background:linear-gradient(135deg, rgba(34,211,238,.24), rgba(99,102,241,.18));
+    }
+
     .option.correct{
       background:linear-gradient(135deg, rgba(16,185,129,.30), rgba(34,197,94,.18));
       border-color:rgba(34,197,94,.42);
@@ -1273,56 +1284,56 @@
       {
         id:"cq1", section:"core",
         question:"A patient pays a monthly amount to keep the insurance plan active even during a month when no care is used. What is that payment called?",
-        correct:"Premium",
-        rationale:"Correct. Premium keeps coverage active. It is not tied to whether the patient used a service that month.",
+        correct:"Premium: regular payment that keeps coverage active",
+        rationale:"Correct. Premium is the regular payment that keeps the insurance policy active.",
         distractors:[
-          {text:"Deductible", why:"Not this. Deductible is what the patient pays first before insurance begins sharing eligible costs."},
-          {text:"Copay", why:"Not this. Copay is a fixed amount for a covered service."},
-          {text:"Coinsurance", why:"Not this. Coinsurance is a percentage share of an allowed amount."}
+          {text:"Deductible: amount paid before cost sharing starts", why:"Not this. A deductible is paid before the plan begins sharing eligible costs."},
+          {text:"Copay: set visit amount for a covered service", why:"Not this. A copay is a fixed amount tied to a covered service."},
+          {text:"Coinsurance: percent share of the allowed amount", why:"Not this. Coinsurance is a percentage share of the allowed amount."}
         ]
       },
       {
         id:"cq2", section:"core",
         question:"Which term best describes a fixed amount a patient pays for a covered visit, such as $20 at check-in?",
-        correct:"Copay",
-        rationale:"Correct. A copay is a fixed dollar amount. Fixed amount is the key clue.",
+        correct:"Copay: set dollar amount for a covered service",
+        rationale:"Correct. A copay is a fixed dollar amount for a covered service.",
         distractors:[
-          {text:"Coinsurance", why:"Not this. Coinsurance is a percentage, not a fixed amount."},
-          {text:"Deductible", why:"Not this. Deductible is the amount paid first before the plan shares eligible costs."},
-          {text:"Premium", why:"Not this. Premium keeps the policy active."}
+          {text:"Premium: regular payment that keeps coverage active", why:"Not this. Premium keeps the policy active, whether care is used or not."},
+          {text:"Deductible: amount paid before cost sharing starts", why:"Not this. A deductible is paid before the plan shares eligible costs."},
+          {text:"Coinsurance: percent share of the allowed amount", why:"Not this. Coinsurance is a percentage, not a set dollar amount."}
         ]
       },
       {
         id:"cq3", section:"core",
         question:"Which statement best describes coinsurance?",
-        correct:"The patient's percentage share of an allowed amount",
-        rationale:"Correct. Coinsurance is expressed as a percentage, such as 20% of the allowed amount.",
+        correct:"Percent share paid from the allowed amount",
+        rationale:"Correct. Coinsurance is a percentage share, such as 20% of the allowed amount.",
         distractors:[
-          {text:"The monthly amount paid to maintain coverage", why:"That is premium."},
-          {text:"The fixed office visit amount due at check-in", why:"That is usually a copay."},
-          {text:"The document that explains claim processing", why:"That is the EOB."}
+          {text:"Regular payment made to keep coverage active", why:"That describes premium, not coinsurance."},
+          {text:"Set dollar amount paid for a covered visit", why:"That describes copay, not coinsurance."},
+          {text:"Claim document explaining payer processing", why:"That describes an EOB, not coinsurance."}
         ]
       },
       {
         id:"cq4", section:"core",
         question:"The person receiving care is covered under her father's insurance plan. She is most accurately described as the:",
-        correct:"Dependent",
-        rationale:"Correct. A dependent is covered under another person's plan.",
+        correct:"Dependent: covered under another person's plan",
+        rationale:"Correct. A dependent is covered under another person's insurance plan.",
         distractors:[
-          {text:"Payer", why:"Not this. The payer processes claims."},
-          {text:"Provider", why:"Not this. The provider gives the care."},
-          {text:"Adjudicator", why:"Not this. Adjudication is the process, not the patient's role."}
+          {text:"Payer: organization that processes the claim", why:"Not this. The payer is the insurance entity that processes the claim."},
+          {text:"Provider: person or facility giving the care", why:"Not this. The provider delivers the healthcare service."},
+          {text:"Subscriber: primary enrollee on the plan", why:"Not this. The subscriber is the primary enrollee on the insurance plan."}
         ]
       },
       {
         id:"cq5", section:"core",
         question:"What is the best description of adjudication?",
-        correct:"The payer's review process that determines coverage, payment, and patient responsibility",
-        rationale:"Correct. Adjudication is the payer's processing of the claim.",
+        correct:"Payer review that decides coverage and payment",
+        rationale:"Correct. Adjudication is the payer's review process for coverage, payment, and patient responsibility.",
         distractors:[
-          {text:"The provider's exam of the patient", why:"That is clinical care, not adjudication."},
-          {text:"The patient's monthly payment to keep the plan", why:"That is premium."},
-          {text:"The amount written on the provider's invoice before insurance", why:"That is billed amount, not adjudication."}
+          {text:"Clinical exam that documents patient findings", why:"That describes clinical care documentation, not claim adjudication."},
+          {text:"Monthly payment that keeps insurance active", why:"That describes premium, not claim adjudication."},
+          {text:"Original charge listed before payer review", why:"That describes the billed amount, not adjudication."}
         ]
       }
     ];
@@ -1338,34 +1349,34 @@
       {
         id:"rs1", section:"reinforce",
         question:"Maria says, “My plan says specialist visits are $35 each time.” Which term best fits that statement?",
-        correct:"Copay",
+        correct:"Copay: set dollar amount for a covered visit",
         rationale:"Correct. A set amount due for a covered visit is a copay.",
         distractors:[
-          {text:"Coinsurance", why:"Coinsurance is a percentage, not a fixed number like $35."},
-          {text:"Premium", why:"Premium is paid to keep coverage active."},
-          {text:"Deductible", why:"Deductible is an amount paid before insurance begins sharing eligible costs."}
+          {text:"Premium: regular payment to keep coverage active", why:"Premium keeps coverage active; it is not a visit-specific amount."},
+          {text:"Deductible: amount paid before cost sharing", why:"Deductible is paid before the plan shares eligible costs."},
+          {text:"Coinsurance: percent share of allowed amount", why:"Coinsurance is a percentage, not a fixed dollar amount."}
         ]
       },
       {
         id:"rs2", section:"reinforce",
         question:"At the start of the year, the patient owes more because the plan requires an amount to be paid first before sharing eligible costs. What concept is most directly involved?",
-        correct:"Deductible",
+        correct:"Deductible: first amount before cost sharing",
         rationale:"Correct. Early-year patient costs often point to the deductible not yet being met.",
         distractors:[
-          {text:"Premium", why:"Premium maintains coverage but does not describe paying first before sharing."},
-          {text:"Subscriber", why:"Subscriber is a plan role, not a payment rule."},
-          {text:"Claim", why:"A claim is a request for payment sent to the payer."}
+          {text:"Premium: regular payment to keep coverage active", why:"Premium maintains coverage but does not describe paying first before sharing."},
+          {text:"Subscriber: primary enrollee listed on the plan", why:"Subscriber is a plan role, not a payment rule."},
+          {text:"Claim: request sent to payer for processing", why:"A claim is a payment request, not the patient's first-pay rule."}
         ]
       },
       {
         id:"rs3", section:"reinforce",
         question:"The clinic sends information to the insurance company requesting payment for services provided. What is being sent?",
-        correct:"Claim",
+        correct:"Claim: request sent to payer for processing",
         rationale:"Correct. The provider submits a claim for payment processing.",
         distractors:[
-          {text:"EOB", why:"The EOB comes after the payer processes the claim."},
-          {text:"Premium", why:"Premium is not sent by the clinic as a request for payment for care."},
-          {text:"Dependent", why:"Dependent is a covered family member, not a transaction."}
+          {text:"EOB: payer explanation after claim review", why:"The EOB comes after the payer processes the claim."},
+          {text:"Premium: regular payment to keep coverage active", why:"Premium is not the clinic's payment request for services."},
+          {text:"Dependent: covered person under another plan", why:"Dependent is a coverage role, not a claim transaction."}
         ]
       }
     ];
@@ -1396,34 +1407,34 @@
       {
         id:"eq1", section:"eob",
         question:"On an EOB, what does allowed amount represent?",
-        correct:"The amount the payer recognizes under the contract for the service",
-        rationale:"Correct. Allowed amount is the recognized contracted amount, which may be lower than what the provider billed.",
+        correct:"Contracted amount the payer recognizes for service",
+        rationale:"Correct. Allowed amount is the payer-recognized amount under the contract.",
         distractors:[
-          {text:"The exact amount the patient already paid at the front desk", why:"Not necessarily. Allowed amount is not the same as an upfront payment."},
-          {text:"The provider's original charge before the claim was processed", why:"That is billed amount."},
-          {text:"The provider's final bill after collection", why:"An EOB is not the final bill."}
+          {text:"Amount the patient already paid at check-in", why:"Not this. Allowed amount is not the same as an upfront payment."},
+          {text:"Original charge before the claim was processed", why:"That is the billed amount, not the allowed amount."},
+          {text:"Final provider invoice after claim collection", why:"An EOB explains processing; it is not the final bill."}
         ]
       },
       {
         id:"eq2", section:"eob",
         question:"Which statement is true about an Explanation of Benefits?",
-        correct:"It explains how the claim was processed, but it is not the bill itself",
-        rationale:"Correct. This distinction is one of the most important takeaways in medical billing literacy.",
+        correct:"It explains claim processing; it is not the bill",
+        rationale:"Correct. The EOB explains how the payer processed the claim; it is not the provider's bill.",
         distractors:[
-          {text:"It is the same as a provider invoice", why:"Wrong. A provider invoice requests payment; an EOB explains claim processing."},
-          {text:"It is sent by the provider to set the premium", why:"Wrong. Premium is not established through an EOB."},
-          {text:"It replaces the need for claim adjudication", why:"Wrong. The EOB is the result of adjudication."}
+          {text:"It serves as the provider invoice for payment", why:"Wrong. A provider invoice requests payment; an EOB explains processing."},
+          {text:"It sets the premium charged for next month", why:"Wrong. Premium is not established through an EOB."},
+          {text:"It replaces the payer's claim review process", why:"Wrong. The EOB is produced after adjudication."}
         ]
       },
       {
         id:"eq3", section:"eob",
         question:"In the mock EOB, why is the billed amount higher than the allowed amount?",
-        correct:"Because the provider charged one amount, but the payer contract recognizes a lower allowed amount",
-        rationale:"Correct. The difference often becomes a contractual adjustment with in-network care.",
+        correct:"The contract recognizes less than the charge",
+        rationale:"Correct. The provider charged one amount, but the payer contract recognized a lower allowed amount.",
         distractors:[
-          {text:"Because the patient paid the bill twice", why:"No. That does not explain billed versus allowed amount."},
-          {text:"Because the subscriber changed to dependent status", why:"Plan roles do not directly create billed-versus-allowed differences."},
-          {text:"Because coinsurance increases the billed amount", why:"Coinsurance affects patient share, not what the provider initially charged."}
+          {text:"The patient paid the provider charge twice", why:"No. Double payment does not explain billed versus allowed amount."},
+          {text:"The subscriber changed to dependent status", why:"No. Plan roles do not create billed-versus-allowed differences."},
+          {text:"The coinsurance increased the billed charge", why:"No. Coinsurance affects patient share, not the original charge."}
         ]
       }
     ];
@@ -1432,34 +1443,34 @@
       {
         id:"wk1", section:"work",
         question:"A patient says, “My EOB says the provider billed $180, but the allowed amount is only $120. Why?” What is the best response?",
-        correct:"The provider's charge and the payer's allowed amount are not always the same; the allowed amount is the contracted recognized amount",
-        rationale:"Correct. This explains the core idea clearly and accurately.",
+        correct:"The payer contract may recognize a lower amount",
+        rationale:"Correct. The provider charge and the payer's allowed amount are not always the same.",
         distractors:[
-          {text:"Because the patient is automatically responsible for the difference between billed and allowed in every case", why:"Too broad and often wrong. In-network contractual adjustments often prevent billing that difference."},
-          {text:"Because billed amount means the payer already approved full payment", why:"Wrong. Billed amount is just the original charge."},
-          {text:"Because the EOB is the final invoice from the provider", why:"Wrong. EOB is not the bill."}
+          {text:"The patient always owes the entire difference", why:"Too broad and often wrong. In-network adjustments may remove that difference."},
+          {text:"The billed amount means full payment was approved", why:"Wrong. Billed amount is the original charge before payer review."},
+          {text:"The EOB is the provider's final payment bill", why:"Wrong. The EOB explains claim processing; it is not the bill."}
         ]
       },
       {
         id:"wk2", section:"work",
         question:"A patient sees $60 marked as deductible applied on the EOB and asks what that means. Which explanation is best?",
-        correct:"It means $60 of the patient's responsibility went toward the amount they must pay first before the plan begins sharing eligible costs",
-        rationale:"Correct. That is the clearest patient-friendly explanation.",
+        correct:"That amount went toward the patient's first-pay rule",
+        rationale:"Correct. The $60 was applied toward the amount the patient must pay before eligible cost sharing begins.",
         distractors:[
-          {text:"It means the payer added a penalty fee", why:"Wrong. Deductible is a standard plan rule, not a penalty."},
-          {text:"It means the monthly premium increased by $60", why:"Wrong. Deductible and premium are different concepts."},
-          {text:"It means the provider entered the wrong code", why:"Not supported by the information given."}
+          {text:"That amount is a penalty added by the payer", why:"Wrong. A deductible is a standard plan rule, not a penalty."},
+          {text:"That amount raised the monthly premium charge", why:"Wrong. Deductible and premium are different concepts."},
+          {text:"That amount proves the provider used a wrong code", why:"Not supported. The EOB only shows deductible application here."}
         ]
       },
       {
         id:"wk3", section:"work",
         question:"Which statement would be most important to remember before explaining an EOB to a patient at the front desk?",
-        correct:"An EOB is an explanation of claim processing and should not be confused with a bill",
-        rationale:"Correct. This prevents one of the most common misunderstandings.",
+        correct:"An EOB explains processing; it is not the bill",
+        rationale:"Correct. This prevents one of the most common patient misunderstandings.",
         distractors:[
-          {text:"Coinsurance and copay always mean the same thing", why:"Wrong. They are different."},
-          {text:"Allowed amount is always the same as billed amount", why:"Wrong. Often it is not."},
-          {text:"The policyholder must always be the patient", why:"Wrong. A patient can be a dependent."}
+          {text:"Copay and coinsurance mean the same thing", why:"Wrong. Copay is fixed; coinsurance is a percentage."},
+          {text:"Allowed amount always equals billed amount", why:"Wrong. The allowed amount may be lower than the billed amount."},
+          {text:"The policyholder is always the patient seen", why:"Wrong. A patient can be a dependent under another person's plan."}
         ]
       }
     ];
@@ -1711,14 +1722,34 @@
       `;
     }
 
+    function lockQuestionBox(box, message="You already answered this item. Use Reset Progress if you want a fresh attempt."){
+      const feedback = $(".feedback", box);
+      $$(".option", box).forEach(opt => {
+        opt.disabled = true;
+        if(opt.dataset.correct === "true") opt.classList.add("correct");
+      });
+      if(feedback && message){
+        feedback.className = "feedback show info";
+        feedback.innerHTML = message;
+      }
+    }
+
     function bindQuestionInteractions(root, sectionName){
       $$(".qa-box", root).forEach(box => {
         const qid = box.dataset.qid;
         const feedback = $(".feedback", box);
+
+        if(answerAlreadyCounted(qid)){
+          lockQuestionBox(box);
+          return;
+        }
+
         $$(".option", box).forEach(btn => {
-          if(answerAlreadyCounted(qid)) btn.disabled = true;
           btn.addEventListener("click", () => {
-            if(answerAlreadyCounted(qid)) return;
+            if(answerAlreadyCounted(qid)){
+              lockQuestionBox(box);
+              return;
+            }
             const correct = btn.dataset.correct === "true";
             registerAnswer({id:qid, section:sectionName, correct});
             $$(".option", box).forEach(opt => {
@@ -1757,7 +1788,42 @@
       `).join("");
 
       let dragged = null;
+
+      function placeMatch(term, zone){
+        const pill = $(`.pill[data-term="${CSS.escape(term)}"]`, bank) || $(`.pill[data-term="${CSS.escape(term)}"]`, zones);
+        const expected = matchItems.find(m => m.term === term)?.target;
+        const uniqueId = `match-${term}`;
+        if(!pill || answerAlreadyCounted(uniqueId)) return;
+
+        zone.appendChild(pill);
+        pill.classList.remove("selected");
+        pill.style.cursor = "default";
+        pill.draggable = false;
+        dragged = null;
+
+        const correct = expected === zone.dataset.target;
+        registerAnswer({id:uniqueId, section:"reinforce", correct});
+        zone.classList.add(correct ? "correct" : "wrong");
+
+        const feedback = $("#matchFeedback");
+        feedback.className = "feedback show " + (correct ? "good" : "bad");
+        feedback.innerHTML = correct
+          ? `<strong>Nice.</strong> <strong>${term}</strong> matches this idea correctly.`
+          : `<strong>That pairing is off.</strong> <strong>${term}</strong> does not best match this idea.`;
+        playTone(correct ? "good" : "bad");
+        saveState();
+      }
+
       $$(".pill", bank).forEach(pill => {
+        pill.addEventListener("click", () => {
+          if(answerAlreadyCounted(`match-${pill.dataset.term}`)) return;
+          $$(".pill").forEach(p => p.classList.remove("selected"));
+          dragged = pill;
+          pill.classList.add("selected");
+          $("#matchFeedback").className = "feedback show info";
+          $("#matchFeedback").innerHTML = `<strong>${pill.dataset.term}</strong> selected. Now tap the best matching box.`;
+        });
+
         pill.addEventListener("dragstart", e => {
           dragged = pill;
           e.dataTransfer.setData("text/plain", pill.dataset.term);
@@ -1765,6 +1831,10 @@
       });
 
       $$(".dropzone", zones).forEach(zone => {
+        zone.addEventListener("click", () => {
+          if(dragged) placeMatch(dragged.dataset.term, zone);
+        });
+
         zone.addEventListener("dragover", e => {
           e.preventDefault();
           zone.classList.add("over");
@@ -1773,27 +1843,8 @@
         zone.addEventListener("drop", e => {
           e.preventDefault();
           zone.classList.remove("over");
-          if(!dragged) return;
-          const term = dragged.dataset.term;
-          const expected = matchItems.find(m => m.term === term)?.target;
-          const uniqueId = `match-${term}`;
-          if(answerAlreadyCounted(uniqueId)) return;
-
-          zone.appendChild(dragged);
-          dragged.style.cursor = "default";
-          dragged.draggable = false;
-
-          const correct = expected === zone.dataset.target;
-          registerAnswer({id:uniqueId, section:"reinforce", correct});
-          zone.classList.add(correct ? "correct" : "wrong");
-
-          const feedback = $("#matchFeedback");
-          feedback.className = "feedback show " + (correct ? "good" : "bad");
-          feedback.innerHTML = correct
-            ? `<strong>Nice.</strong> <strong>${term}</strong> matches this idea correctly.`
-            : `<strong>That pairing is off.</strong> <strong>${term}</strong> does not best match this idea.`;
-          playTone(correct ? "good" : "bad");
-          saveState();
+          const term = e.dataTransfer.getData("text/plain") || dragged?.dataset.term;
+          if(term) placeMatch(term, zone);
         });
       });
     }
@@ -1813,6 +1864,16 @@
       const feedback = $("#scenarioFeedback");
       feedback.className = "feedback";
       feedback.innerHTML = "";
+
+      if(answerAlreadyCounted(q.id)){
+        $$(".option", $("#scenarioOptions")).forEach(o => {
+          o.disabled = true;
+          if(o.dataset.correct === "true") o.classList.add("correct");
+        });
+        feedback.className = "feedback show info";
+        feedback.innerHTML = "You already answered this scenario. Use Next Scenario or Reset Progress for a fresh attempt.";
+        return;
+      }
 
       $$(".option", $("#scenarioOptions")).forEach(btn => {
         btn.addEventListener("click", () => {
@@ -1870,6 +1931,16 @@
       const feedback = $("#workFeedback");
       feedback.className = "feedback";
       feedback.innerHTML = "";
+
+      if(answerAlreadyCounted(q.id)){
+        $$(".option", $("#workOptions")).forEach(o => {
+          o.disabled = true;
+          if(o.dataset.correct === "true") o.classList.add("correct");
+        });
+        feedback.className = "feedback show info";
+        feedback.innerHTML = "You already answered this workplace case. Use Next Workplace Case or Reset Progress for a fresh attempt.";
+        return;
+      }
 
       $$(".option", $("#workOptions")).forEach(btn => {
         btn.addEventListener("click", () => {
